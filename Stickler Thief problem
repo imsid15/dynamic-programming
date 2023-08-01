@@ -1,0 +1,24 @@
+//gfg problem link
+//https://practice.geeksforgeeks.org/problems/stickler-theif-1587115621/1?page=1&company[]=Google&category[]=Dynamic%20Programming&sortBy=submissions
+int solve(int nums[],int index,int check){
+        vector<int>prev(2,0);
+        vector<int>curr(2,0);
+        prev[1]=nums[0];
+        for(int i=1;i<=index;i++){
+            for(int j=0;j<=check;j++){
+            int nottake=prev[1];
+            int take=0;
+            if(j==1){
+                take=nums[i]+prev[0];
+            }
+            curr[j]=max(take,nottake);
+            }
+            prev=curr;
+        }
+        return prev[check];
+    }
+    int FindMaxSum(int arr[], int n)
+    {
+        return solve(arr,n-1,1);
+
+    }
