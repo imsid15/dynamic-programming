@@ -1,0 +1,24 @@
+//Rod cutting
+//https://practice.geeksforgeeks.org/problems/rod-cutting0840/1?page=1&company[]=Google&category[]=Dynamic%20Programming&sortBy=submissions
+int solve(int price[],int index,int target){
+        vector<int>prev(target+1,0);
+         vector<int>curr(target+1,0);
+        for(int i=1;i<=target;i++){
+              prev[i]=i*price[0];
+        }
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+            int nottake=prev[j];
+            int take=0;
+            if(j>=i+1){
+                take=price[i] + curr[j-i-1];
+            }
+            curr[j]=max(take,nottake);
+            }
+            prev=curr;
+        }
+        return prev[target];
+    }
+    int cutRod(int price[], int n) {
+        return solve(price,n-1,n);
+    }
