@@ -1,0 +1,83 @@
+https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1?page=1&company[]=Google&category[]=Dynamic%20Programming&sortBy=submissions
+//RECURSION
+int solve(int index,int target,int val[],int wt[]){
+        if(index<0){
+            return 0;
+        }
+        int nottake=solve(index-1,target,val,wt);
+        int take=0;
+        if(target>=wt[index]){
+            take=val[index]+ solve(index,target-wt[index],val,wt);
+        }
+        return max(take,nottake);
+    }
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        return solve(N-1,W,val,wt);
+    }
+//MEMORIZATION
+
+int solve(int index,int target,int val[],int wt[],vector<vector<int>>&dp){
+        if(index<0){
+            return 0;
+        }
+        if(dp[index][target]!=-1){
+            return dp[index][target];
+        }
+        int nottake=solve(index-1,target,val,wt,dp);
+        int take=0;
+        if(target>=wt[index]){
+            take=val[index]+ solve(index,target-wt[index],val,wt,dp);
+        }
+        return dp[index][target]=max(take,nottake);
+    }
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        vector<vector<int>>dp(N,vector<int>(W+1,-1));
+        return solve(N-1,W,val,wt,dp);
+    }
+//TABULATION
+
+int solve(int index,int target,int val[],int wt[],vector<vector<int>>&dp){
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+                int nottake=dp[i-1][j];
+                int take=0;
+                if(j>=wt[i-1]){
+                    take=val[i-1]+ dp[i][j-wt[i-1]];
+                }
+                dp[i][j]=max(take,nottake);
+            }
+        }
+        return dp[index][target];
+        
+    }
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        vector<vector<int>>dp(N+1,vector<int>(W+1,0));
+        return solve(N,W,val,wt,dp);
+    }
+
+//SPACE OPT
+
+int solve(int index,int target,int val[],int wt[]){
+        vector<int>prev(target+1,0);
+         vector<int>curr(target+1,0);
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+                int nottake=prev[j];
+                int take=0;
+                if(j>=wt[i-1]){
+                    take=val[i-1]+ curr[j-wt[i-1]];
+                }
+                curr[j]=max(take,nottake);
+            }
+            prev=curr;
+        }
+        return prev[target];
+        
+    }
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        return solve(N,W,val,wt);
+    }
