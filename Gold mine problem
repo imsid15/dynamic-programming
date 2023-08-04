@@ -1,0 +1,25 @@
+//MEMORIZATION
+
+int solve(int row, int col, vector<vector<int>>&M,int n,int m,vector<vector<int>>&dp){
+        if(row==n || row<0){
+            return 0;
+        }
+        if(col==m){
+            return 0;
+        }
+        if(dp[row][col]!=-1){
+            return dp[row][col];
+        }
+        return dp[row][col]=M[row][col]+max(max(solve(row,col+1,M,n,m,dp),solve(row+1,col+1,M,n,m,dp)),solve(row-1,col+1,M,n,m,dp));
+    }
+    int maxGold(int n, int m, vector<vector<int>> M)
+    {
+       vector<vector<int>>dp(n,vector<int>(m,-1));
+       int maxi=0;
+       for(int i=0;i<n;i++){
+           maxi=max(maxi,solve(i,0,M,n,m,dp));
+       }
+       return maxi;
+    }
+
+//tabulation
