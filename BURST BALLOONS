@@ -1,0 +1,24 @@
+//https://www.codingninjas.com/studio/problems/mining-diamonds_4244494?source=youtube&campaign=striver_dp_videos&utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_dp_videos&leftPanelTab=1
+#include <bits/stdc++.h> 
+int solve(vector<int>&a,int i,int j,vector<vector<int>>&dp){
+	if(i>j){
+		return 0;
+	}
+	if(dp[i][j]!=-1){
+		return dp[i][j];
+	}
+	int maxi=INT_MIN;
+	for(int ind=i;ind<=j;ind++){
+		int ans=a[i-1]*a[ind]*a[j+1]+solve(a,i,ind-1,dp)+solve(a,ind+1,j,dp);
+		maxi=max(maxi,ans);
+	}
+	return dp[i][j]=maxi;
+}
+int maxCoins(vector<int>& a)
+{
+	int n=a.size();
+	a.insert(a.begin(),1);
+	a.push_back(1);
+	vector<vector<int>>dp(n+2,vector<int>(n+2,-1));
+	return solve(a,1,n,dp);
+}
