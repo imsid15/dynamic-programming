@@ -1,0 +1,79 @@
+//https://practice.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1
+MEMORIZATION
+int solve(int wt[],int val[],int index,int target,vector<vector<int>>&dp){
+        if(index==0){
+            if(target>=wt[0]){
+                return val[0];
+            }
+            return 0;
+        }
+        if(dp[index][target]!=-1){
+            return dp[index][target];
+        }
+        int nottake=solve(wt,val,index-1,target,dp);
+        int take=0;
+        if(target>=wt[index]){
+            take=val[index]+solve(wt,val,index-1,target-wt[index],dp);
+        }
+        return dp[index][target]=max(take,nottake);
+    }
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<vector<int>>dp(n,vector<int>(W+1,-1));
+       return solve(wt,val,n-1,W,dp);
+    }
+
+//TABULATION
+
+ for(int i=0;i<=target;i++){
+            if(i>=wt[0]){
+                dp[0][i]=val[0];
+            }
+        }
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+            int nottake=dp[i-1][j];
+            int take=0;
+            if(j>=wt[i]){
+                take=val[i]+dp[i-1][j-wt[i]];
+            }
+             dp[i][j]=max(take,nottake);
+                
+            }
+        }
+        return dp[index][target];
+    }
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+        vector<vector<int>>dp(n,vector<int>(W+1,0));
+       return solve(wt,val,n-1,W,dp);
+    }
+
+//SPACE OPT
+
+int solve(int wt[],int val[],int index,int target){
+        vector<int>prev(target+1,0);
+        vector<int>curr(target+1,0);
+        for(int i=0;i<=target;i++){
+            if(i>=wt[0]){
+                prev[i]=val[0];
+            }
+        }
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+            int nottake=prev[j];
+            int take=0;
+            if(j>=wt[i]){
+                take=val[i]+prev[j-wt[i]];
+            }
+             curr[j]=max(take,nottake);
+                
+            }
+            prev=curr;
+        }
+        return prev[target];
+    }
+    int knapSack(int W, int wt[], int val[], int n) 
+    { 
+       return solve(wt,val,n-1,W);
+    }
