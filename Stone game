@@ -1,0 +1,56 @@
+//RECURSION
+class Solution {
+public:
+    int solve(vector<int>& piles,int index1,int index2){
+        if(index1==index2){
+            return piles[index1];
+        }
+        if(piles[index1]>piles[index2]){
+            return piles[index1]+solve(piles,index1+1,index2);
+        }
+        else{
+            return piles[index2]+solve(piles,index1,index2-1);
+        }
+    }
+    bool stoneGame(vector<int>& piles) {
+        long long int n=piles.size();
+        long long int alice=solve(piles,0,n-1);
+        long long int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=piles[i];
+        }
+        if(alice>sum-alice)return true;
+        return false;
+    }
+};
+
+//MEMOIZATION
+class Solution {
+public:
+    int solve(vector<int>& piles,int index1,int index2,vector<vector<int>>&dp){
+        if(index1==index2){
+            return piles[index1];
+        }
+        if(dp[index1][index2]!=-1)return dp[index1][index2];
+        if(piles[index1]>piles[index2]){
+            return dp[index1][index2]=piles[index1]+solve(piles,index1+1,index2,dp);
+        }
+        else{
+            return dp[index1][index2]=piles[index2]+solve(piles,index1,index2-1,dp);
+        }
+    }
+    bool stoneGame(vector<int>& piles) {
+        long long int n=piles.size();
+        vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
+        long long int alice=solve(piles,0,n-1,dp);
+        long long int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=piles[i];
+        }
+        if(alice>sum-alice)return true;
+        return false;
+    }
+};
+
+//TABULATION
+
