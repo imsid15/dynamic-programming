@@ -1,0 +1,95 @@
+//https://leetcode.com/problems/last-stone-weight-ii/description/
+//MEMOIZATION
+class Solution {
+public:
+    int solve(vector<int>& stones,int index,int target,vector<vector<int>>&dp){
+        if(target==0 || index<0)return 0;
+        if(dp[index][target]!=-1)return dp[index][target];
+        int nottake=solve(stones,index-1,target,dp);
+        int take=0;
+        if(target>=stones[index]){
+            take=stones[index]+solve(stones,index-1,target-stones[index],dp);
+        }
+        return dp[index][target]=max(take,nottake);
+    }
+    int lastStoneWeightII(vector<int>& stones) {
+        int n=stones.size();
+        int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=stones[i];
+        }
+        vector<vector<int>>dp(n,vector<int>(sum/2+1,-1));
+        return sum-2*solve(stones,n-1,sum/2,dp);
+    }
+};
+
+
+//TABULATION
+
+
+class Solution {
+public:
+    int solve(vector<int>& stones,int index,int target,vector<vector<int>>&dp){
+        for(int i=1;i<=target;i++){
+            if(i>=stones[0]){
+                dp[0][i]=stones[0];
+            }
+        }
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+                int nottake=dp[i-1][j];
+                int take=0;
+                if(j>=stones[i]){
+                    take=stones[i]+dp[i-1][j-stones[i]];
+                }
+                dp[i][j]=max(take,nottake);
+            }
+        }
+        return dp[index][target];
+    }
+    int lastStoneWeightII(vector<int>& stones) {
+        int n=stones.size();
+        int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=stones[i];
+        }
+        vector<vector<int>>dp(n,vector<int>(sum/2+1,0));
+        return sum-2*solve(stones,n-1,sum/2,dp);
+    }
+};
+
+
+//SPACE OPTIMISATION
+
+class Solution {
+public:
+    int solve(vector<int>& stones,int index,int target){
+        vector<int>curr(target+1,0);
+                vector<int>prev(target+1,0);
+        for(int i=1;i<=target;i++){
+            if(i>=stones[0]){
+                prev[i]=stones[0];
+            }
+        }
+        for(int i=1;i<=index;i++){
+            for(int j=1;j<=target;j++){
+                int nottake=prev[j];
+                int take=0;
+                if(j>=stones[i]){
+                    take=stones[i]+prev[j-stones[i]];
+                }
+                curr[j]=max(take,nottake);
+            }
+            prev=curr;
+        }
+        return prev[target];
+    }
+    int lastStoneWeightII(vector<int>& stones) {
+        int n=stones.size();
+        int sum=0;
+        for(int i=0;i<n;i++){
+            sum+=stones[i];
+        }
+        return sum-2*solve(stones,n-1,sum/2);
+    }
+};
