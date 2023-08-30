@@ -1,0 +1,21 @@
+//https://leetcode.com/problems/minimum-cost-for-tickets/description/?envType=study-plan-v2&envId=dynamic-programming
+class Solution {
+public:
+    int solve(vector<int>& days, vector<int>& costs,int day,int index,vector<vector<int>>&dp){
+        int n=days.size();
+        if(index==n)return 0;
+        if(dp[day][index]!=-1)return dp[day][index];
+        if(day>days[index]){
+            return solve(days,costs,day,index+1,dp);
+        }
+        int one=costs[0]+solve(days,costs,days[index]+1,index+1,dp);
+        int seven=costs[1]+solve(days,costs,days[index]+7,index+1,dp);
+        int thirty=costs[2]+solve(days,costs,days[index]+30,index+1,dp);
+        return dp[day][index]=min(min(one,seven),thirty);
+    }
+    int mincostTickets(vector<int>& days, vector<int>& costs) {
+        int n=days.size();
+        vector<vector<int>>dp(400,vector<int>(n,-1));
+        return solve(days,costs,days[0],0,dp);
+    }
+};
