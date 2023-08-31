@@ -1,0 +1,23 @@
+//https://leetcode.com/problems/decode-ways/description/
+class Solution {
+public:
+    int solve(string &s,int index,vector<int>&dp){
+        int n=s.size();
+        if(index==s.size())return 1;
+        if(s[index]=='0')return 0;
+        if(dp[index]!=-1)return dp[index];
+        int ans=solve(s,index+1,dp);
+        if(s[index]<'2' && index+1<n){
+            ans+=solve(s,index+2,dp);
+        }
+        else if(s[index]=='2' && index+1<n && s[index+1]<='6'){
+            ans+=solve(s,index+2,dp);
+        }
+        return dp[index]=ans;
+    }
+    int numDecodings(string s) {
+        int n=s.size();
+        vector<int>dp(n,-1);
+        return solve(s,0,dp);
+    }
+};
