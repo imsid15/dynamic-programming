@@ -1,0 +1,25 @@
+//https://leetcode.com/problems/word-break/description/?envType=study-plan-v2&envId=dynamic-programming
+class Solution {
+public:
+    bool solve(string &s,set<string>& wordDict,int index,vector<int>&dp){
+        if(index==s.size())return 1;
+        if(dp[index]!=-1)return dp[index];
+        string temp;
+        for(int j=index;j<s.size();j++){
+            temp+=s[j];
+            if(wordDict.find(temp)!=wordDict.end()){
+                if(solve(s,wordDict,j+1,dp))return dp[index]=true;
+            }
+        }
+        return dp[index]=false;
+    }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        set<string>st;
+        for(int i=0;i<wordDict.size();i++){
+            st.insert(wordDict[i]);
+        }
+        int n=s.size();
+        vector<int>dp(n,-1);
+        return solve(s,st,0,dp);
+    }
+};
