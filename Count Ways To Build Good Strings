@@ -1,0 +1,21 @@
+//https://leetcode.com/problems/count-ways-to-build-good-strings/description/?envType=study-plan-v2&envId=dynamic-programming
+class Solution {
+    int mod=(int)(1e9+7);
+public:
+    int solve(int low, int high, int zero, int one,int ans,vector<int>&dp){
+        if(ans>high)return 0;
+        if(ans==high)return 1;
+        if(dp[ans]!=-1)return dp[ans];
+        int way=0;
+        if(ans>=low && ans<=high){
+            way++;
+        }
+ way+=solve(low,high,zero,one,ans+zero,dp)+solve(low,high,zero,one,ans+one,dp);
+        return dp[ans]=way%mod;
+    }
+    int countGoodStrings(int low, int high, int zero, int one) {
+        int a=max(one,zero);
+        vector<int>dp(a+high,-1);
+        return solve(low,high,zero,one,0,dp)%mod;
+    }
+};
