@@ -1,0 +1,36 @@
+//https://leetcode.com/problems/flip-string-to-monotone-increasing/description/
+class Solution {
+public:
+    int solve(string s,int index,char check,map<pair<int,char>,int>&m){
+        int n=s.size();
+        if(index>=n)return 0;
+        if(m.find({index,check})!=m.end())return m[{index,check}];
+        int take=1e8;
+        int nottake=1e8;
+        if(check=='0'){
+            nottake=solve(s,index+1,s[index],m);
+            if(s[index]=='0'){
+                s[index]='1';
+                take=1+solve(s,index+1,'1',m);
+            } 
+            else{
+                s[index]='0';
+                take=1+solve(s,index+1,'0',m);
+            }  
+        }
+        else if(check=='1'){
+            if(s[index]=='1'){
+                nottake=solve(s,index+1,'1',m);
+            }
+            else{
+                take=1+solve(s,index+1,'1',m);
+            }
+        }
+        return m[{index,check}]=min(take,nottake);
+    }
+    int minFlipsMonoIncr(string s) {
+        int n=s.size();
+        map<pair<int,char>,int>m;
+        return solve(s,'0',-1,m);
+    }
+};
