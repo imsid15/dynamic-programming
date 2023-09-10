@@ -1,0 +1,115 @@
+//https://leetcode.com/problems/count-vowels-permutation/description/
+//Memoization
+class Solution {
+public:
+    int mod=1e9+7;
+    long long solve(long long n,char prev, map<pair<long long,char>,long long>&mp){
+        if(n==0)return 1;
+        long long ans;
+        if(mp.find({n,prev})!=mp.end())return mp[{n,prev}]%mod;
+        if(prev=='z'){
+            ans=(solve(n-1,'a',mp)%mod+solve(n-1,'e',mp)%mod+solve(n-1,'i',mp)%mod+solve(n-1,'o',mp)%mod+solve(n-1,'u',mp)%mod)%mod;
+        }
+        if(prev=='a'){
+            ans=solve(n-1,'e',mp)%mod;
+        }
+        if(prev=='e'){
+            ans=(solve(n-1,'a',mp)%mod+solve(n-1,'i',mp)%mod)%mod;
+        }
+        if(prev=='i'){
+            ans=(solve(n-1,'a',mp)%mod+solve(n-1,'e',mp)%mod+solve(n-1,'o',mp)%mod+solve(n-1,'u',mp)%mod)%mod;
+        }
+        if(prev=='o'){
+            ans=(solve(n-1,'u',mp)%mod+solve(n-1,'i',mp)%mod)%mod;
+        }
+        if(prev=='u'){
+            ans=solve(n-1,'a',mp)%mod;
+        }
+        return mp[{n,prev}]=ans%mod;
+    }
+    int countVowelPermutation(int n) {
+        map<pair<long long,char>,long long>mp;
+        return solve(n,'z',mp)%mod;
+    }
+};
+//TABULATION
+
+class Solution {
+public:
+    int mod=1e9+7;
+    long long solve(long long n,char prev, map<pair<long long,char>,long long>&mp){
+        // if(n==0)return 1;
+        mp[{0,'a'}]=mp[{0,'e'}]=mp[{0,'i'}]=mp[{0,'o'}]=mp[{0,'u'}]=1;
+        for(int i=1;i<=n;i++){
+            for(char j='a';j<=prev;j++){
+              long long ans;
+        if(j=='z'){
+            ans=(mp[{i-1,'a'}]%mod+mp[{i-1,'e'}]%mod+mp[{i-1,'i'}]%mod+mp[{i-1,'o'}]%mod+mp[{i-1,'u'}]%mod)%mod;
+        }
+        if(j=='a'){
+            ans=mp[{i-1,'e'}]%mod;
+        }
+        if(j=='e'){
+            ans=(mp[{i-1,'a'}]%mod+mp[{i-1,'i'}]%mod)%mod;
+        }
+        if(j=='i'){
+            ans=(mp[{i-1,'a'}]%mod+mp[{i-1,'e'}]%mod+mp[{i-1,'o'}]%mod+mp[{i-1,'u'}]%mod)%mod;
+        }
+        if(j=='o'){
+            ans=(mp[{i-1,'u'}]%mod+mp[{i-1,'i'}]%mod)%mod;
+        }
+        if(j=='u'){
+            ans=mp[{i-1,'a'}]%mod;
+        }
+        mp[{i,j}]=ans%mod;
+            }
+        }
+        return mp[{n,prev}];
+        // if(mp.find({n,prev})!=mp.end())return mp[{n,prev}]%mod;
+    }
+    int countVowelPermutation(int n) {
+        map<pair<long long,char>,long long>mp;
+        return solve(n,'z',mp)%mod;
+    }
+};
+//SPACE OPT
+class Solution {
+public:
+    int mod=1e9+7;
+    long long solve(long long n,char prev){
+        map<char,long long>prev1;
+        map<char,long long>curr;
+        prev1['a']=prev1['e']=prev1['i']=prev1['o']=prev1['u']=1;
+        for(int i=1;i<=n;i++){
+            for(char j='a';j<=prev;j++){
+              long long ans;
+        if(j=='z'){
+            ans=(prev1['a']%mod+prev1['e']%mod+prev1['i']%mod+prev1['o']%mod+prev1['u']%mod)%mod;
+        }
+        if(j=='a'){
+            ans=prev1['e']%mod;
+        }
+        if(j=='e'){
+            ans=(prev1['a']%mod+prev1['i']%mod)%mod;
+        }
+        if(j=='i'){
+            ans=(prev1['a']%mod+prev1['e']%mod+prev1['o']%mod+prev1['u']%mod)%mod;
+        }
+        if(j=='o'){
+            ans=(prev1['u']%mod+prev1['i']%mod)%mod;
+        }
+        if(j=='u'){
+            ans=prev1['a']%mod;
+        }
+        curr[j]=ans%mod;
+            }
+            prev1=curr;
+        }
+        return prev1[prev];
+        // if(mp.find({n,prev})!=mp.end())return mp[{n,prev}]%mod;
+    }
+    int countVowelPermutation(int n) {
+        return solve(n,'z')%mod;
+    }
+};
+
